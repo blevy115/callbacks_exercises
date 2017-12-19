@@ -209,7 +209,7 @@ console.log( 'The total number of credit purchases is:', numCreditPurchases );
   - This array is allowed to contain duplicate values.
 */
 vendors = []
-var uniqueVendors =  transactions.filter(transaction => transaction['vendor']).map(transaction => transaction['vendor']).join(", ")
+var uniqueVendors =  transactions.filter(transaction => transaction['vendor']).map(transaction => transaction['vendor'])
 
 
 console.log( 'The unique vendors are:', uniqueVendors );
@@ -227,10 +227,24 @@ console.log( 'The unique vendors are:', uniqueVendors );
   - The assembled array should be made up of strings, not full `transaction` objects.
   - Make sure that the resulting array *does not* include any duplicates.
 */
-var uniqueCustomers = Array.from(new Set(transactions.filter(transaction => transaction['customer']).map(transaction => transaction['customer']))).join(", ")
+// var uniqueCustomers = Array.from(new Set(
+//   transactions.filter(transaction => transaction['customer'])
+//               .map(transaction => transaction['customer'])))
+//
+//
 
-console.log( 'The unique customers are:', uniqueCustomers );
+newCustomers = []
 
+  transactions.filter(transaction => transaction['customer'])
+              .map(transaction => transaction['customer']).forEach(function(transaction){
+                if (newCustomers.includes(transaction) != true){
+                  newCustomers.push(transaction)
+              }
+            }
+          )
+var uniqueCustomers = newCustomers
+
+              console.log( 'The unique customers are:', uniqueCustomers );
 
 // --------------------------------------------------
 // QUESTION 07
@@ -336,7 +350,14 @@ console.log( 'The net profit is:', netProfit );
   HINTS:
   - The result of this calculation should be a number (not an array, object, or other data type).
 */
-var mostItems;
+
+
+var maxItems = []
+transactions.forEach(function(transaction){
+  maxItems.push(transaction['items'].length);
+})
+
+var mostItems = maxItems.sort().pop()
 
 console.log( 'The most items sold in a single transaction is:', mostItems );
 
@@ -347,6 +368,19 @@ console.log( 'The most items sold in a single transaction is:', mostItems );
 /*
   Calculate the sum of the 'purchase' with the fewest items.
 */
-var sumOfSmallestPurchase;
+var minItems = []
+transactions.filter(transaction => transaction['type']==='purchase').forEach(function(transaction){
+  minItems.push(transaction['items'].length);
+})
+minItem = minItems.sort().shift()
+console.log(minItem);
+var total = 0;
+var sumOfSmallestPurchase = transactions.filter(transaction => transaction['type']==='purchase' && transaction['items'].length === minItem).map(transaction => transaction['items']).map(function(transaction){
+  transaction.map(function(sale){
+    total += sale['price']
+  })
+  return total
+}
+).shift()
 
 console.log( 'The sum of the smallest purchase is:', sumOfSmallestPurchase );
