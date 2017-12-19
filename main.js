@@ -245,7 +245,12 @@ console.log( 'The unique customers are:', uniqueCustomers );
   - There may be more than 1 'sale' that includes 5 or more items.
   - Individual transactions do not have either `name` or `numItems` properties, we'll have to add them to the output.
 */
-var bigSpenders;
+var bigSpenders = transactions.filter(transaction => transaction['type'] === 'sale').filter(transaction => transaction['items'].length >= 5).map(function(transaction){
+  var hash = {}
+  hash['name'] = transaction['customer'];
+  hash['numItems'] = transaction['items'].length;
+  return hash;
+});
 
 console.log( 'The "big spenders" are:', bigSpenders );
 
@@ -259,7 +264,16 @@ console.log( 'The "big spenders" are:', bigSpenders );
   HINT(S):
   - Transactions don't have 'prices', but their 'items' do!
 */
-var sumSales;
+var sumSales = transactions.find(function(transaction){
+  transaction['type'] === 'sale';
+  return transaction
+})['items'].map(function(sale){
+  total = 0;
+  total += sale['price'];
+  return total;
+}).reduce(function(a,b){
+  return a+b
+})
 
 console.log( 'The sum of all sales is:', sumSales );
 
@@ -275,7 +289,15 @@ console.log( 'The sum of all sales is:', sumSales );
   - Make sure to include 'price' information from *all* purchases.
 */
 
-var sumPurchases;
+var total = 0;
+var singleTotal
+var sumPurchases = transactions.filter(transaction => transaction['type'] === 'purchase').map(transaction => transaction['items']).map(function(transaction){
+  transaction.map(function(sale){
+    total += sale['price']
+  })
+  return total
+}
+).pop()
 
 console.log( 'The sum of all purhcases is:', sumPurchases );
 
@@ -293,7 +315,14 @@ console.log( 'The sum of all purhcases is:', sumPurchases );
   HINT(S):
   - Unlike 'QUESTION 08' and 'QUESTION 09', here we're interested in both 'sale' and 'purchase' transactions.
 */
-var netProfit;
+var total = 0;
+var netProfit = transactions.map(transaction => transaction['items']).map(function(transaction){
+  transaction.map(function(sale){
+    total += sale['price']
+  })
+  return total
+}
+).pop()
 
 console.log( 'The net profit is:', netProfit );
 
