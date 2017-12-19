@@ -227,7 +227,7 @@ console.log( 'The unique vendors are:', uniqueVendors );
   - The assembled array should be made up of strings, not full `transaction` objects.
   - Make sure that the resulting array *does not* include any duplicates.
 */
-var uniqueCustomers;
+var uniqueCustomers = Array.from(new Set(transactions.filter(transaction => transaction['customer']).map(transaction => transaction['customer']))).join(", ")
 
 console.log( 'The unique customers are:', uniqueCustomers );
 
